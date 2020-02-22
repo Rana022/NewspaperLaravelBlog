@@ -17,12 +17,13 @@
                   </div>
                   <span><a class="btn btn-sm btn-primary pull-right" href="{{route('admin.category.index')}}">Show Category</a></span>
                   <div class="card-body">
-                  <form action="{{route('admin.category.update')}}" method="post">
+                  <form action="{{route('admin.category.update',$category->id)}}" method="post">
                     @csrf
+                    @method('PUT')
                     <div class="form-group row mb-4">
                       <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Category</label>
                       <div class="col-sm-12 col-md-7">
-                        <input type="text" class="form-control" name="name">
+                        <input type="text" class="form-control" name="name" value="{{$category->name}}">
                       </div>
                     </div>
                     <div class="form-group row mb-4">
@@ -30,8 +31,12 @@
                       <div class="col-sm-12 col-md-7">
                         <select class="form-control" name="parent_id">
                              <option value="">Category</option>
-                            @foreach ($categories as $row)
-                         <option value="{{$row->id}}">{{$row->name}}</option>
+                            @foreach ($parent as $row)
+                         <option value="{{$row->id}}"
+                          @if($category->parent_id !== NULL) Selected @else '' @endif
+                           >
+                          {{$row->name}}
+                        </option>
                             @endforeach
                         </select>
                       </div>

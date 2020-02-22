@@ -28,6 +28,12 @@
              <i data-feather="monitor"></i><span>Category</span></a>
             </li>
 
+            <li class="{{Request::is('admin/tag*') ? 'active' : ''}}">
+            <a href="{{route('admin.tag.index')}}"
+             class="nav-link">
+             <i data-feather="monitor"></i><span>Tag</span></a>
+            </li>
+
             <li class="menu-header">Media</li>
           </ul>
            @endif

@@ -13,10 +13,10 @@
               <div class="col-12">
                 <div class="card">
                   <div class="card-header">
-                    <h4>Category Table</h4>
+                    <h4>Tag Table</h4>
                   </div>
                   <div class="card-body">
-                  <span><a class="btn btn-sm btn-primary pull-right" href="{{route('admin.category.create')}}">create category</a></span>
+                  <span><a class="btn btn-sm btn-primary pull-right" href="{{route('admin.tag.create')}}">create tag</a></span>
                     <div class="table-responsive">
                       <table class="table table-striped" id="table-1">
                         <thead>
@@ -24,14 +24,13 @@
                             <th class="text-center">
                               #
                             </th>
-                            <th>Category Name</th>
-                            <th>Sub Category</th>
+                            <th>Tag Name</th>
                             <th>Created_at</th>
                             <th>Action</th>
                           </tr>
                         </thead>
                         <tbody>
-                          @foreach ($categories as $key=>$row)
+                          @foreach ($tags as $key=>$row)
                               <tr>
                             <td>
                               {{$key + 1}}
@@ -39,16 +38,16 @@
                           <td>{{$row->name}}</td>
 
                             <td>
-                               {{$row->parent_id}}
-                            </td>
-
-                            <td>
                               {{$row->created_at}}
                             </td>
 
                             <td>
-                            <a href="{{route('admin.category.edit', $row->id)}}" class="btn btn-primary">EDIT</a>
-                            <a href="#" class="btn btn-danger">DELETE</a>
+                            <a href="{{route('admin.tag.edit', $row->id)}}" class="btn btn-primary">EDIT</a>
+                            <a href="#" class="btn btn-danger" onclick="deleteTag({{$row->id}})">DELETE</a>
+                            <form action="{{route('admin.tag.destroy', $row->id)}}" id="delete-form-{{$row->id}}" method="post" style="display: none">
+                            @csrf
+                            @method('DELETE')
+                            </form>
                             </td>
                           </tr>
                           @endforeach
@@ -163,4 +162,28 @@
   <script src="{{asset('assets/backend/bundles/jquery-ui/jquery-ui.min.js')}}"></script>
   <!-- Page Specific JS File -->
   <script src="{{asset('assets/backend/js/page/datatables.js')}}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script>
+    function deleteTag(id){
+      Swal.fire({
+  title: 'Are you sure?',
+  text: "You won't be able to revert this!",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Yes, delete it!'
+}).then((result) => {
+  if (result.value) {
+    event.preventDefault();
+    document.getElementById('delete-form-'+id).submit();
+    Swal.fire(
+      'Deleted!',
+      'Your file has been deleted.',
+      'success'
+    )
+  }
+})
+    }
+  </script>
 @endpush

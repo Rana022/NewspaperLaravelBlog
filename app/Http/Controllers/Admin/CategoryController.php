@@ -16,9 +16,9 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-        $categories = Category::latest()->get();
-        return view('admin.categories',compact('categories'));
+    {
+         $categories = Category::all();
+        return view('admin.category.categories',compact('categories'));
     }
 
     /**
@@ -29,7 +29,7 @@ class CategoryController extends Controller
     public function create()
     {   
         $categories = Category::where('parent_id', NULL)->get();
-        return view('admin.create_category', compact('categories'));
+        return view('admin.category.create_category', compact('categories'));
     }
 
     /**
@@ -39,7 +39,10 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
+        $this->validate($request, [
+            'name' => 'required|unique:categories|min:3',
+        ]);
         $category = new Category();
         $category->name = $request->name;
         $category->parent_id = $request->parent_id;
@@ -68,8 +71,9 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $categories = Category::where('parent_id', NULL)->get();
-        return view('admin.create_category', compact('categories'));
+        $category = Category::find($id);
+         $parent = Category::where('parent_id', NULL)->get();
+        return view('admin.category.edit_category', compact('category', 'parent'));
     }
 
     /**
@@ -98,6 +102,9 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+      $category = Category::find($id);
+      $category->delete();
+      toastr::success('Category Successfully Deleted :)', 'success');
+      return redirect()->route('admin.category.index');
     }
 }
